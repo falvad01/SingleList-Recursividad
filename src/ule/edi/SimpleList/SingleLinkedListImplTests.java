@@ -27,31 +27,40 @@ public class SingleLinkedListImplTests {
 	
    @Test
    public void constructorElemens(){
-	   Assert.assertEquals("[]", lS.toString());
+	   assertEquals("[]", lS.toString());
 	   lS=new SingleLinkedListImpl<String>("A", "B", "C", "D");
-	   Assert.assertEquals("[A, B, C, D]", lS.toString());
+	   assertEquals("[A, B, C, D]", lS.toString());
    }
 
    @Test
-   public void addAtPos(){
+   public void testAddAtPos(){
 	   
 	   lS.addAtPos("A", 1);
-	   Assert.assertEquals("[A]", lS.toString());
+	   assertEquals("[A]", lS.toString());
 	   lS.addAtPos("C", 1);
-	   Assert.assertEquals("[C, A]", lS.toString());
+	   assertEquals("[C, A]", lS.toString());
 	   lS.addAtPos("B", 2);
-	   Assert.assertEquals("[C, B, A]", lS.toString());
-	   lS.addAtPos("D", 5);
-	   Assert.assertEquals("[C, B, A, D]", lS.toString());
+	   assertEquals("[C, B, A]", lS.toString());
+	   lS.addAtPos("H", 2);
+	   assertEquals("[C, H, B, A]", lS.toString());
+	   lS.addAtPos("K", 3);
+	   assertEquals("[C, H, K, B, A]", lS.toString());
+	   lS.addAtPos("D", 8);
+	   assertEquals("[C, H, K, B, A, D]", lS.toString());
+   }
+   
+   @Test(expected = IllegalArgumentException.class)
+   public void testAddAtPosException(){
+	   lS.addAtPos("A", 0);
    }
    
    @Test
    public void addNTimes(){
 	   
 	   lS.addNTimes("A", 3);
-	   Assert.assertEquals("[A, A, A]", lS.toString());
+	   assertEquals("[A, A, A]", lS.toString());
 	   lS.addNTimes("B", 2);
-	   Assert.assertEquals("[A, A, A, B, B]", lS.toString());
+	   assertEquals("[A, A, A, B, B]", lS.toString());
 	   
    }
    
@@ -68,8 +77,15 @@ public class SingleLinkedListImplTests {
 	   lS.addFirst("B");
 	   lS.addFirst("C");
 	   lS.addFirst("D");
-	   Assert.assertEquals("[D, C, B, A]", lS.toString());
+	   assertEquals("[D, C, B, A]", lS.toString());
    }
+   
+   @Test
+   public void testSize() {
+	   assertEquals(4, lSABC.size());
+   }
+   
+   
 // TEST DE SUBLIST
 	@Test
 	public void tesSubListEnListaVacia() {

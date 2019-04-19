@@ -11,18 +11,16 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 		this.header = null;
 
-		for (int i = 0; i < elements.length; i++) {
+		for (int i = 0; i < elements.length; i++) {  //TODO esta bine asi o se necesita otro metodo
 
 			addLast(elements[i]);
 		}
-
 	}
 
 	@Override
 	public void addLast(T element) {
 
 		Node<T> aux = new Node<T>(element);
-
 		if (isEmpty()) {
 
 			this.header = aux;
@@ -30,24 +28,27 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 		} else {
 
 			addLast(element, header);
-
 		}
 	}
 
+	/**
+	 * Recorremos todos los nodos de manera recursiva
+	 * @param element
+	 * @param nodo nodo que vamos moviendo
+	 * @return
+	 */
 	private Node<T> addLast(T element, Node<T> nodo) {
 
-		if (nodo.next == null) {
+		if (nodo.next == null) { // Llegamos al ultimo nodo
 
 			Node<T> aux = new Node<T>(element);
-
-			nodo.next = aux;
-
+			nodo.next = aux; // insertamos el nuevo nodo
 			return aux;
 
 		} else {
 
 			nodo = nodo.next;
-			return addLast(element, nodo);
+			return addLast(element, nodo); // nos movemos en los nodos
 		}
 	}
 
@@ -65,13 +66,30 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 		} else {
 			return false;
 		}
-
 	}
 
 	@Override
 	public int size() {
 
-		return 0;
+		return contador(1, this.header);// Empieza en 1, ya que la cabezera cuanta como 1
+	}
+
+	/**
+	 * 
+	 * @param i Contador de nodos
+	 * @param nodo referencia al nodo contado anterior
+	 * @return
+	 */
+	private int contador(int i, Node<T> nodo) {
+
+		if (nodo.next == null) {
+
+			return i + 1; // Contamos el ultimo y retornamos
+		} else {
+
+			return contador(i + 1, nodo.next);
+		}
+
 	}
 
 	@Override
@@ -89,7 +107,55 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	@Override
 	public void addAtPos(T element, int p) {
-		// TODO Auto-generated method stub
+
+		if (p <= 0) {
+			System.out.println("caso 1");
+			throw new IllegalArgumentException();
+
+		} else if (p == 1) {
+			System.out.println("caso 2");
+			addFirst(element);
+
+		} else if (p >= size()) {
+
+			addLast(element);
+			System.out.println("caso 3");
+
+		} else {
+			System.out.println("caso 4");
+			Node<T> aux = buscarNodo(p, 2, this.header, this.header.next, element);// El contador empieza en 2 ya que no
+																					// se introduce en la priumera
+																					// posiscion en este caso
+
+		}
+
+	}
+	/**
+	 * 
+	 * @param pos
+	 * @param contador //Contador de la posion donde hay que meter el nodo
+	 * @param anterior llevamos dos referencias, dos nodos consecutivos entre los cuales se metera el nodo indicado
+	 * @param posterior
+	 * @param element
+	 * @return
+	 */
+	private Node<T> buscarNodo(int pos, int contador, Node<T> anterior, Node<T> posterior, T element) {
+		System.out.println(contador - 1);
+		System.out.println(pos);
+		if (pos - 1 == contador - 1) {
+
+			Node<T> ret = new Node<T>(element);
+		
+			anterior.next = ret;
+			ret.next = posterior;
+			return ret;
+		} else {
+		
+			anterior = anterior.next; //Movemos las referencia
+			posterior = posterior.next;
+
+			return buscarNodo(pos, contador + 1, anterior, posterior, element);
+		}
 
 	}
 
