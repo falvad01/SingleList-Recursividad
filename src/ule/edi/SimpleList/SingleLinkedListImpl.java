@@ -11,7 +11,7 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 		this.header = null;
 
-		for (int i = 0; i < elements.length; i++) {  //TODO esta bine asi o se necesita otro metodo
+		for (int i = 0; i < elements.length; i++) { // TODO esta bine asi o se necesita otro metodo
 
 			addLast(elements[i]);
 		}
@@ -27,28 +27,28 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 		} else {
 
-			addLast(element, header);
+			Node<T> aux2 = ultimoNodo(header);
+			aux2.next = aux; // insertamos el nuevo nodo
 		}
 	}
 
 	/**
 	 * Recorremos todos los nodos de manera recursiva
+	 * 
 	 * @param element
-	 * @param nodo nodo que vamos moviendo
-	 * @return
+	 * @param nodo    nodo que vamos moviendo
+	 * @return el ultimo nodo de la lista
 	 */
-	private Node<T> addLast(T element, Node<T> nodo) {
+	private Node<T> ultimoNodo(Node<T> nodo) {
 
 		if (nodo.next == null) { // Llegamos al ultimo nodo
 
-			Node<T> aux = new Node<T>(element);
-			nodo.next = aux; // insertamos el nuevo nodo
-			return aux;
+			return nodo;
 
 		} else {
 
 			nodo = nodo.next;
-			return addLast(element, nodo); // nos movemos en los nodos
+			return ultimoNodo(nodo); // nos movemos en los nodos
 		}
 	}
 
@@ -76,7 +76,7 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	/**
 	 * 
-	 * @param i Contador de nodos
+	 * @param i    Contador de nodos
 	 * @param nodo referencia al nodo contado anterior
 	 * @return
 	 */
@@ -130,28 +130,29 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 		}
 
 	}
+
 	/**
 	 * 
 	 * @param pos
-	 * @param contador //Contador de la posion donde hay que meter el nodo
-	 * @param anterior llevamos dos referencias, dos nodos consecutivos entre los cuales se metera el nodo indicado
+	 * @param contador  //Contador de la posion donde hay que meter el nodo
+	 * @param anterior  llevamos dos referencias, dos nodos consecutivos entre los
+	 *                  cuales se metera el nodo indicado
 	 * @param posterior
 	 * @param element
 	 * @return
 	 */
 	private Node<T> buscarNodo(int pos, int contador, Node<T> anterior, Node<T> posterior, T element) {
-		System.out.println(contador - 1);
-		System.out.println(pos);
+
 		if (pos - 1 == contador - 1) {
 
 			Node<T> ret = new Node<T>(element);
-		
+
 			anterior.next = ret;
 			ret.next = posterior;
 			return ret;
 		} else {
-		
-			anterior = anterior.next; //Movemos las referencia
+
+			anterior = anterior.next; // Movemos las referencia
 			posterior = posterior.next;
 
 			return buscarNodo(pos, contador + 1, anterior, posterior, element);
@@ -161,7 +162,38 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	@Override
 	public void addNTimes(T element, int n) {
-		// TODO Auto-generated method stub
+
+		if (isEmpty()) {
+			addFirst(element);
+			nTimes(n - 1, 1, element, ultimoNodo(this.header));
+		} else {
+			nTimes(n, 1, element, ultimoNodo(this.header));
+		}
+
+	}
+
+	/**
+	 * Aniadimos de manera recursiva los n elementos
+	 * @param vueltas
+	 * @param contador
+	 * @param elemento
+	 * @param nodo
+	 * @return
+	 */
+	private Node<T> nTimes(int vueltas, int contador, T elemento, Node<T> nodo) {
+		Node<T> add = new Node<T>(elemento);
+
+		if (vueltas == contador - 1) {
+
+			return nodo;
+		} else {
+
+			nodo.next = add;
+
+			nodo = nodo.next;
+
+			return nTimes(vueltas, contador + 1, elemento, nodo);
+		}
 
 	}
 
@@ -173,8 +205,35 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	@Override
 	public T removeLast() throws EmptyCollectionException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		
+		Node<T> delete = penultimoNodo(this.header,1);
+		T ret = delete.content;
+		delete.next = null; //Borramos el ultimo nodo borrando su referencia
+		
+		return ret;
+	}
+	/**
+	 * Metodo que nos devuelve el penultimo nodo de una lista de nodos
+	 * 
+	 * @param nodo
+	 * @param vueltas
+	 * @return
+	 */
+	private Node<T> penultimoNodo(Node<T> nodo, int vueltas) {
+		
+		System.out.println(size() + "    " + vueltas);
+		
+		if (size()-2 == vueltas) { // Llegamos al penultimo
+			
+			return nodo;
+
+		} else {
+
+			nodo = nodo.next;
+			return penultimoNodo(nodo, vueltas+1); // nos movemos en los nodos
+		}
+		
 	}
 
 	@Override

@@ -61,6 +61,9 @@ public class SingleLinkedListImplTests {
 	   assertEquals("[A, A, A]", lS.toString());
 	   lS.addNTimes("B", 2);
 	   assertEquals("[A, A, A, B, B]", lS.toString());
+	   assertEquals("[A, B, C]", lSABC.toString());
+	   lSABC.addNTimes("H", 4);
+	   assertEquals("[A, B, C, H, H, H, H]", lSABC.toString());
 	   
    }
    
@@ -83,6 +86,14 @@ public class SingleLinkedListImplTests {
    @Test
    public void testSize() {
 	   assertEquals(4, lSABC.size());
+   }
+   
+   @Test
+   public void testRemoveLast() throws EmptyCollectionException {
+	   
+	   assertEquals(lSABC.toString(), "[A, B, C]");
+	   lSABC.removeLast();
+	   assertEquals(lSABC.toString(),"[A, B]");
    }
    
    
