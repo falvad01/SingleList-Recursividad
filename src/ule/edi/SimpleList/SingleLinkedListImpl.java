@@ -10,11 +10,23 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 	public SingleLinkedListImpl(T... elements) {
 
 		this.header = null;
-
-		for (int i = 0; i < elements.length; i++) { // TODO esta bine asi o se necesita otro metodo
-
-			addLast(elements[i]);
+		System.out.println(elements.length);
+		if (elements.length > 0) {
+			lanzarElementos(0, elements);
 		}
+	}
+
+	private T lanzarElementos(int i, T... elements) {
+		System.out.println(i + "   " + elements.length);
+
+		if (i == elements.length-1) {
+			addLast(elements[i]);
+			return elements[i];
+		}
+
+		addLast(elements[i]);
+		return lanzarElementos(i+1, elements);
+
 	}
 
 	@Override
@@ -174,6 +186,7 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	/**
 	 * Aniadimos de manera recursiva los n elementos
+	 * 
 	 * @param vueltas
 	 * @param contador
 	 * @param elemento
@@ -205,14 +218,14 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	@Override
 	public T removeLast() throws EmptyCollectionException {
-		
-		
-		Node<T> delete = penultimoNodo(this.header,1);
+
+		Node<T> delete = penultimoNodo(this.header, 1);
 		T ret = delete.content;
-		delete.next = null; //Borramos el ultimo nodo borrando su referencia
-		
+		delete.next = null; // Borramos el ultimo nodo borrando su referencia
+
 		return ret;
 	}
+
 	/**
 	 * Metodo que nos devuelve el penultimo nodo de una lista de nodos
 	 * 
@@ -221,19 +234,17 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 	 * @return
 	 */
 	private Node<T> penultimoNodo(Node<T> nodo, int vueltas) {
-		
-		System.out.println(size() + "    " + vueltas);
-		
-		if (size()-2 == vueltas) { // Llegamos al penultimo
-			
+
+		if (size() - 2 == vueltas) { // Llegamos al penultimo
+
 			return nodo;
 
 		} else {
 
 			nodo = nodo.next;
-			return penultimoNodo(nodo, vueltas+1); // nos movemos en los nodos
+			return penultimoNodo(nodo, vueltas + 1); // nos movemos en los nodos
 		}
-		
+
 	}
 
 	@Override
