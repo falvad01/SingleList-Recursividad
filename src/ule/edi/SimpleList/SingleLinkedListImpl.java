@@ -1,5 +1,6 @@
 package ule.edi.SimpleList;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 import java.util.Iterator;
@@ -10,22 +11,21 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 	public SingleLinkedListImpl(T... elements) {
 
 		this.header = null;
-		System.out.println(elements.length);
+
 		if (elements.length > 0) {
 			lanzarElementos(0, elements);
 		}
 	}
 
 	private T lanzarElementos(int i, T... elements) {
-		System.out.println(i + "   " + elements.length);
 
-		if (i == elements.length-1) {
+		if (i == elements.length - 1) {
 			addLast(elements[i]);
 			return elements[i];
 		}
 
 		addLast(elements[i]);
-		return lanzarElementos(i+1, elements);
+		return lanzarElementos(i + 1, elements);
 
 	}
 
@@ -101,7 +101,6 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 			return contador(i + 1, nodo.next);
 		}
-
 	}
 
 	@Override
@@ -140,7 +139,6 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 																					// posiscion en este caso
 
 		}
-
 	}
 
 	/**
@@ -169,7 +167,6 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 			return buscarNodo(pos, contador + 1, anterior, posterior, element);
 		}
-
 	}
 
 	@Override
@@ -181,7 +178,6 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 		} else {
 			nTimes(n, 1, element, ultimoNodo(this.header));
 		}
-
 	}
 
 	/**
@@ -207,7 +203,6 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 			return nTimes(vueltas, contador + 1, elemento, nodo);
 		}
-
 	}
 
 	@Override
@@ -249,8 +244,90 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	@Override
 	public T removeLast(T elem) throws EmptyCollectionException {
-		// TODO Auto-generated method stub
-		return null;
+
+		ArrayList<Integer> posiciones = new ArrayList<>();
+		posiciones = buscarPos(elem, 1, posiciones, this.header);
+
+		if (posiciones.get(posiciones.size() - 1) == 1) { // caso cuando el elemento a eliminar es la cabeza
+			T ret = header.content;
+			this.header = header.next;
+			return ret;
+
+		} else {
+			//la posicion a elimianr es la ultima guardada en el arrayList
+			return eliminarPos(this.header, this.header.next, posiciones.get(posiciones.size() - 1), 1);
+		}
+
+	}
+
+	/**
+	 * Eliminamos el nodo de la posciokn pasada por argumento
+	 * 
+	 * @param anterior  Nodos
+	 * @param posterior
+	 * @param pos       Posicion a elimonar
+	 * @param vueltas   numero de vueltas dada recursivamente
+	 * @return
+	 */
+	private T eliminarPos(Node<T> anterior, Node<T> posterior, int pos, int vueltas) {
+
+		if (pos - 1 == vueltas) {
+
+			T ret = posterior.content;
+
+			if (posterior.next == null) { // caso de que el elemento a eliminar sea el ultimo de la lista
+				anterior.next = null;
+
+			} else {
+
+				anterior.next = posterior.next;
+			}
+
+			return ret;
+
+		} else {
+
+			anterior = anterior.next; // movemos los nodos
+			posterior = posterior.next;
+
+			return eliminarPos(anterior, posterior, pos, vueltas + 1);
+
+		}
+
+	}
+
+	/**
+	 * 
+	 * Obtenemos la ultima posicion del elemento deseado
+	 * 
+	 * @param elem
+	 * @param vuelta
+	 * @param guardar
+	 * @param nodo
+	 * @return
+	 */
+	private ArrayList<Integer> buscarPos(T elem, int vuelta, ArrayList<Integer> guardar, Node<T> nodo) {
+
+		if (nodo.next == null) {
+
+			if (nodo.content == elem) {
+
+				guardar.add(vuelta);
+			}
+
+			return guardar;
+
+		} else {
+
+			if (nodo.content == elem) { // en caso de que en la lista haya un elemento como el quequeremos borrar los
+										// añadimos al array de posiciones
+
+				guardar.add(vuelta);
+			}
+
+			nodo = nodo.next;
+			return buscarPos(elem, vuelta + 1, guardar, nodo);
+		}
 	}
 
 	@Override
