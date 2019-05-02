@@ -88,14 +88,14 @@ public class SingleLinkedListImplTests {
 		lSABC.removeLast();
 		assertEquals(lSABC.toString(), "[A, B]");
 	}
-	
+
 	@Test
 	public void testRemoveLastElem() throws EmptyCollectionException {
 
 		assertEquals(lSABC.toString(), "[A, B, C]");
 		lSABC.removeLast("C");
 		assertEquals(lSABC.toString(), "[A, B]");
-		
+
 		lS.addLast("A");
 		lS.addLast("A");
 		lS.addLast("A");
@@ -106,32 +106,38 @@ public class SingleLinkedListImplTests {
 		lS.addLast("A");
 		lS.addFirst("K");
 		assertEquals(lS.toString(), "[K, A, A, A, B, C, D, A, A]");
-		
-		assertEquals(lS.removeLast("K"),"K");
+
+		assertEquals(lS.removeLast("K"), "K");
 		assertEquals(lS.toString(), "[A, A, A, B, C, D, A, A]");
-		
-		assertEquals(lS.removeLast("A"),"A");
+
+		assertEquals(lS.removeLast("A"), "A");
 		assertEquals(lS.toString(), "[A, A, A, B, C, D, A]");
-		assertEquals(lS.removeLast("A"),"A");
+		assertEquals(lS.removeLast("A"), "A");
 		assertEquals(lS.toString(), "[A, A, A, B, C, D]");
-		assertEquals(lS.removeLast("A"),"A");
+		assertEquals(lS.removeLast("A"), "A");
 		assertEquals(lS.toString(), "[A, A, B, C, D]");
-		assertEquals(lS.removeLast("C"),"C");
+		assertEquals(lS.removeLast("C"), "C");
 		assertEquals(lS.toString(), "[A, A, B, D]");
-		assertEquals(lS.removeLast("A"),"A");
+		assertEquals(lS.removeLast("A"), "A");
 		assertEquals(lS.toString(), "[A, B, D]");
-		assertEquals(lS.removeLast("A"),"A");
+		assertEquals(lS.removeLast("A"), "A");
 		assertEquals(lS.toString(), "[B, D]");
-		assertEquals(lS.removeLast("D"),"D");
+		assertEquals(lS.removeLast("D"), "D");
 		assertEquals(lS.toString(), "[B]");
-		assertEquals(lS.removeLast("B"),"B");
+		assertEquals(lS.removeLast("B"), "B");
 		assertEquals(lS.toString(), "[]");
-		
+
+	}
+
+	@Test
+	public void testReverse() {
+
+		assertEquals(lSABC.reverse().toString(), "[C, B, A]"); // TODO duda de retorno de datos
 	}
 
 // TEST DE SUBLIST
 	@Test
-	public void tesSubListEnListaVacia() {
+	public void testSubListEnListaVacia() {
 
 		Assert.assertEquals(-1, lS.isSubList(lSABC));
 	}

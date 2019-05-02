@@ -17,6 +17,45 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 		}
 	}
 
+//////////////////////
+///// ITERADORES
+//////////////////////
+	private class ForwardIterator implements Iterator<T> {
+
+		private Node<T> at = header;
+
+		@Override
+		public boolean hasNext() {
+
+			if (at.next == null) {
+				return false;
+			} else {
+				return true;
+			}
+
+		}
+
+		@Override
+		public T next() {
+
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			} else {
+
+				T ret = at.content;
+				at = at.next;
+				return ret;
+			}
+
+		}
+
+		@Override
+		public void remove() {
+
+			throw new UnsupportedOperationException();
+		}
+	};
+
 	private T lanzarElementos(int i, T... elements) {
 
 		if (i == elements.length - 1) {
@@ -66,8 +105,8 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return new ForwardIterator();
 	}
 
 	@Override
@@ -120,20 +159,16 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 	public void addAtPos(T element, int p) {
 
 		if (p <= 0) {
-			System.out.println("caso 1");
 			throw new IllegalArgumentException();
 
 		} else if (p == 1) {
-			System.out.println("caso 2");
 			addFirst(element);
 
 		} else if (p >= size()) {
 
 			addLast(element);
-			System.out.println("caso 3");
 
 		} else {
-			System.out.println("caso 4");
 			Node<T> aux = buscarNodo(p, 2, this.header, this.header.next, element);// El contador empieza en 2 ya que no
 																					// se introduce en la priumera
 																					// posiscion en este caso
@@ -254,7 +289,7 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 			return ret;
 
 		} else {
-			//la posicion a elimianr es la ultima guardada en el arrayList
+			// la posicion a elimianr es la ultima guardada en el arrayList
 			return eliminarPos(this.header, this.header.next, posiciones.get(posiciones.size() - 1), 1);
 		}
 
@@ -293,7 +328,6 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 			return eliminarPos(anterior, posterior, pos, vueltas + 1);
 
 		}
-
 	}
 
 	/**
@@ -321,7 +355,6 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 			if (nodo.content == elem) { // en caso de que en la lista haya un elemento como el quequeremos borrar los
 										// añadimos al array de posiciones
-
 				guardar.add(vuelta);
 			}
 
@@ -332,8 +365,25 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	@Override
 	public AbstractSingleLinkedListImpl<T> reverse() {
-		// TODO Auto-generated method stub
-		return null;
+
+		SingleLinkedListImpl<T> nuevaLista = new SingleLinkedListImpl<T>();
+
+		return girar(this.header, nuevaLista);
+	}
+
+	private AbstractSingleLinkedListImpl<T> girar(Node<T> nodo, SingleLinkedListImpl<T> listaInvertida) {
+
+		if (nodo.next == null) {
+			listaInvertida.addFirst(nodo.content); // Añadimos el ultimo nodo a la lista
+			return listaInvertida;
+		} else {
+
+			listaInvertida.addFirst(nodo.content);
+			System.out.println(listaInvertida.toString());
+			nodo = nodo.next;
+			return girar(nodo, listaInvertida);
+		}
+
 	}
 
 	@Override

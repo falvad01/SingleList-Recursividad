@@ -89,7 +89,7 @@ public abstract class AbstractSingleLinkedListImpl<T> implements SingleLinkedLis
 	 * @return el elemento que es eliminado
 	 * @throws EmptyCollectionException si la lista está vacía
 	 */
-	public abstract T removeLast() throws EmptyCollectionException ;
+	public abstract T removeLast() throws EmptyCollectionException;
 
 	/**
 	 *   Implementar de forma RECURSIVA
