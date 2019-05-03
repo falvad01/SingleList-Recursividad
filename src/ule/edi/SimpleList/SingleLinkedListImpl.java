@@ -20,14 +20,14 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 //////////////////////
 ///// ITERADORES
 //////////////////////
-	private class ForwardIterator implements Iterator<T> {
+	public class ForwardIterator implements Iterator<T> {
 
 		private Node<T> at = header;
 
 		@Override
 		public boolean hasNext() {
 
-			if (at.next == null) {
+			if (at == null) {
 				return false;
 			} else {
 				return true;
@@ -242,18 +242,39 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	@Override
 	public int indexOf(T elem) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return localizarNodo(this.header, elem, 1);
+	}
+
+	private int localizarNodo(Node<T> nodo, T elem, int pos) {
+
+		if (nodo == null) {
+			throw new NoSuchElementException();
+		} else {
+
+			if (nodo.content.equals(elem)) {
+				return pos;
+			} else {
+				nodo = nodo.next;
+				return localizarNodo(nodo, elem, pos + 1);
+			}
+		}
+
 	}
 
 	@Override
 	public T removeLast() throws EmptyCollectionException {
 
-		Node<T> delete = penultimoNodo(this.header, 1);
-		T ret = delete.content;
-		delete.next = null; // Borramos el ultimo nodo borrando su referencia
+		if (isEmpty()) {
+			throw new EmptyCollectionException("");
+		} else {
 
-		return ret;
+			Node<T> delete = penultimoNodo(this.header, 1);
+			T ret = delete.content;
+			delete.next = null; // Borramos el ultimo nodo borrando su referencia
+
+			return ret;
+		}
 	}
 
 	/**
@@ -280,17 +301,22 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 	@Override
 	public T removeLast(T elem) throws EmptyCollectionException {
 
-		ArrayList<Integer> posiciones = new ArrayList<>();
-		posiciones = buscarPos(elem, 1, posiciones, this.header);
-
-		if (posiciones.get(posiciones.size() - 1) == 1) { // caso cuando el elemento a eliminar es la cabeza
-			T ret = header.content;
-			this.header = header.next;
-			return ret;
-
+		if (isEmpty()) {
+			throw new EmptyCollectionException("");
 		} else {
-			// la posicion a elimianr es la ultima guardada en el arrayList
-			return eliminarPos(this.header, this.header.next, posiciones.get(posiciones.size() - 1), 1);
+
+			ArrayList<Integer> posiciones = new ArrayList<>();
+			posiciones = buscarPos(elem, 1, posiciones, this.header);
+
+			if (posiciones.get(posiciones.size() - 1) == 1) { // caso cuando el elemento a eliminar es la cabeza
+				T ret = header.content;
+				this.header = header.next;
+				return ret;
+
+			} else {
+				// la posicion a elimianr es la ultima guardada en el arrayList
+				return eliminarPos(this.header, this.header.next, posiciones.get(posiciones.size() - 1), 1);
+			}
 		}
 
 	}
@@ -371,6 +397,12 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 		return girar(this.header, nuevaLista);
 	}
 
+	/**
+	 * 
+	 * @param nodo
+	 * @param listaInvertida
+	 * @return
+	 */
 	private AbstractSingleLinkedListImpl<T> girar(Node<T> nodo, SingleLinkedListImpl<T> listaInvertida) {
 
 		if (nodo.next == null) {
@@ -388,8 +420,57 @@ public class SingleLinkedListImpl<T> extends AbstractSingleLinkedListImpl<T> {
 
 	@Override
 	public int isSubList(AbstractSingleLinkedListImpl<T> part) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		if (isEmpty()) {
+			return -1;
+		} else if (part.isEmpty()) {
+			return 1;
+		} else {
+
+			int ret = localizarSublista(this.header, part.header, 1, 1, false);
+			System.out.println(ret);
+			return ret;
+		}
+	}
+
+	/**
+	 * 
+	 * @param nodo
+	 * @param buscar
+	 * @param pos
+	 * @param count
+	 * @param flag
+	 * @return
+	 */
+	private int localizarSublista(Node<T> nodo, Node<T> buscar, int pos, int count, boolean flag) {
+
+		if (nodo.next == null && !flag) { // No se ha encontrado ninguna posicion de la sublista
+			System.out.println("No se ha encontrado ninguna posicion de la sublista");
+			return -1;
+		} else if (nodo.content == buscar.content) { // Encontrado el nodo de la sublista
+			flag = true;
+			System.out.println("Encontrado el nodo de la sublista en pos: " + pos);
+			count = pos;
+			if (buscar.next == null) {
+				return count;
+			} else { // recoremos la sublista
+
+				System.out.println("recoremos la sublista");
+
+				buscar = buscar.next;
+				nodo = nodo.next;
+				return localizarSublista(nodo, buscar, pos, count, flag);
+
+			}
+
+		} else {// Aun no se ha encontrado la cabecera de la sublista
+
+			System.out.println("Aun no se ha encontrado la cabecera de la sublista en la pos: " + pos);
+			nodo = nodo.next;
+
+			return localizarSublista(nodo, buscar, pos + 1, count, flag);
+		}
+
 	}
 
 }

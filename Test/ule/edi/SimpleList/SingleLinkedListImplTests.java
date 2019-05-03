@@ -2,6 +2,9 @@ package ule.edi.SimpleList;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +27,35 @@ public class SingleLinkedListImplTests {
 		lS = new SingleLinkedListImpl<String>("A", "B", "C", "D");
 		assertEquals("[A, B, C, D]", lS.toString());
 	}
+	
+	@Test
+	public void testForwardIt() {
+		lS = new SingleLinkedListImpl<String>("A", "B", "C", "D");
+		Iterator<String> i = lS.iterator();
+		Assert.assertTrue(i.hasNext());
+		Assert.assertEquals("A", i.next());
+		Assert.assertTrue(i.hasNext());
+		Assert.assertEquals("B", i.next());
+		Assert.assertTrue(i.hasNext());
+		Assert.assertEquals("C", i.next());
+		Assert.assertTrue(i.hasNext());
+		Assert.assertEquals("D", i.next());
+		Assert.assertFalse(i.hasNext());
+		Assert.assertEquals("[A, B, C, D]", lS.toString());
+}
+	
+	@Test(expected = NoSuchElementException.class)
+	public void testForwardItException() {
+		Iterator<String> i = lS.iterator();
+		Assert.assertFalse(i.hasNext());
+		i.next();
+}
+	
+	@Test(expected = UnsupportedOperationException.class)
+	public void testForwardItException2() {
+		Iterator<String> i = lS.iterator();
+		i.remove();;
+}
 
 	@Test
 	public void testAddAtPos() {
@@ -88,6 +120,11 @@ public class SingleLinkedListImplTests {
 		lSABC.removeLast();
 		assertEquals(lSABC.toString(), "[A, B]");
 	}
+	
+	@Test(expected = EmptyCollectionException.class)
+	public void testRemoveLastException() throws EmptyCollectionException {
+		lS.removeLast();
+	}
 
 	@Test
 	public void testRemoveLastElem() throws EmptyCollectionException {
@@ -128,11 +165,16 @@ public class SingleLinkedListImplTests {
 		assertEquals(lS.toString(), "[]");
 
 	}
+	
+	@Test(expected = EmptyCollectionException.class)
+	public void testRemoveLastElemException() throws EmptyCollectionException {
+		lS.removeLast("K");
+	}
 
 	@Test
 	public void testReverse() {
 
-		assertEquals(lSABC.reverse().toString(), "[C, B, A]"); // TODO duda de retorno de datos
+		assertEquals(lSABC.reverse().toString(), "[C, B, A]");
 	}
 
 // TEST DE SUBLIST
@@ -157,6 +199,24 @@ public class SingleLinkedListImplTests {
 		Assert.assertEquals(3, lS.isSubList(lSABC));
 		lS = new SingleLinkedListImpl<String>("A", "B", "C");
 		Assert.assertEquals(1, lS.isSubList(lSABC));
+	}
+	
+	@Test
+	public void tesSubListConSublistaNoEncontrada() {
+		lS = new SingleLinkedListImpl<String>("a","h");
+		Assert.assertEquals(-1, lSABC.isSubList(lS));
+	}
+	
+	@Test
+	public void testIndexOf() {
+		assertEquals(1, lSABC.indexOf("A"));
+		assertEquals(2, lSABC.indexOf("B"));
+		assertEquals(3, lSABC.indexOf("C"));
+	}
+	@Test(expected = NoSuchElementException.class)
+	public void testIndexOfException() {
+		assertEquals(1, lSABC.indexOf("h"));
+		
 	}
 
 }
